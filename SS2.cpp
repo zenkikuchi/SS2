@@ -10,14 +10,38 @@ int Debug();
 int main()
 {
 	//!絶対にDebugモードで実行してはいけない Releaseモードで実行すること。リンカーからDebugモードのDLLは削除済み
-	//!リンカー先をローカルファイルに移動させること
-	cv::Mat im = cv::imread("C:\\Users\\zen\\Desktop\\SS2assets\\絵画\\モナ・リザ.jpg");    // カラー(RGBの3チャンネル)で読み込み    
-	cv::namedWindow("自由変更可能", cv::WINDOW_FREERATIO);
-	cv::namedWindow("自動調整", cv::WINDOW_AUTOSIZE);
-	cv::imshow("自由変更可能", im);
-	cv::imshow("自動調整", im);
+	//!cv::imreadが動かない致命的な現象あり
+	std::string filepath;
+	std::cout << "ファイルパスを入力してください\n";
+	std::cin >> filepath;
+	if (filepath[0] == '"') {
+		filepath = filepath.substr(1);
+		filepath = filepath.erase(filepath.size() - 1);
+	}
+	cv::Mat img = cv::imread(filepath);    // カラー(RGBの3チャンネル)で読み込み    
+	if (img.empty()) {
+		std::cout << "画像の読み込みに失敗しました。\n";
+	}
+	//cv::namedWindow("自由変更可能", cv::WINDOW_FREERATIO);
+	cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
+	//cv::imshow("自由変更可能", im);
+	cv::imshow("Image", img);
+
+
+	int width = img.cols;
+	int height = img.rows;
+	int test = 0.2;
+	cv::Mat reImage;
+	cv::Mat showreImage;
+	cv::resize(img, reImage, cv::Size(10, 10));
+	//cv::resize(resizedImage, resizedImage, cv::Size(width,height));
+	cv::resize(reImage, showreImage, cv::Size(500,500),1,1,cv::INTER_NEAREST);
+	cv::imshow("resize",showreImage);
 	cv::waitKey();
-	return 0;
+
+	cv::Mat3b reImageAcc = reImage;
+	cv::Vec3b pointer = reImageAcc(cv::Point(0,0));
+	std::cout << "R : " << (int)pointer[2] << " G : " << (int)pointer[1] << " B : " << (int)pointer[0] << std::endl;
 	//Debug();
 }
 
@@ -65,13 +89,3 @@ int Debug() {
 	std::cin >> str;
 }
 
-// プログラムの実行: Ctrl + F5 または [デバッグ] > [デバッグなしで開始] メニュー
-// プログラムのデバッグ: F5 または [デバッグ] > [デバッグの開始] メニュー
-
-// 作業を開始するためのヒント: 
-//    1. ソリューション エクスプローラー ウィンドウを使用してファイルを追加/管理します 
-//   2. チーム エクスプローラー ウィンドウを使用してソース管理に接続します
-//   3. 出力ウィンドウを使用して、ビルド出力とその他のメッセージを表示します
-//   4. エラー一覧ウィンドウを使用してエラーを表示します
-//   5. [プロジェクト] > [新しい項目の追加] と移動して新しいコード ファイルを作成するか、[プロジェクト] > [既存の項目の追加] と移動して既存のコード ファイルをプロジェクトに追加します
-//   6. 後ほどこのプロジェクトを再び開く場合、[ファイル] > [開く] > [プロジェクト] と移動して .sln ファイルを選択します
