@@ -2,10 +2,26 @@
 //
 
 #include <iostream>
-#include <opencv2\opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <MIDIData.h>
+
+int Debug();
+
 int main()
 {
+	//!絶対にDebugモードで実行してはいけない Releaseモードで実行すること。リンカーからDebugモードのDLLは削除済み
+	//!リンカー先をローカルファイルに移動させること
+	cv::Mat im = cv::imread("C:\\Users\\zen\\Desktop\\SS2assets\\絵画\\モナ・リザ.jpg");    // カラー(RGBの3チャンネル)で読み込み    
+	cv::namedWindow("自由変更可能", cv::WINDOW_FREERATIO);
+	cv::namedWindow("自動調整", cv::WINDOW_AUTOSIZE);
+	cv::imshow("自由変更可能", im);
+	cv::imshow("自動調整", im);
+	cv::waitKey();
+	return 0;
+	//Debug();
+}
+
+int Debug() {
 	std::cout << "Hello World!\n";
 	MIDIData* pMIDIData;
 	MIDITrack* pMIDITrack;
