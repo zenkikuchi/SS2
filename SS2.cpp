@@ -9,7 +9,7 @@ int Debug();
 
 int main()
 {
-	//!絶対にDebugモードで実行してはいけない Releaseモードで実行すること。リンカーからDebugモードのDLLは削除済み
+	//!絶対にDebugモードで実行してはいない
 	//!cv::imreadが動かない致命的な現象あり
 	std::string filepath;
 	std::cout << "ファイルパスを入力してください\n";
@@ -36,7 +36,12 @@ int main()
 	cv::resize(img, reImage, cv::Size(10, 10));
 	//cv::resize(resizedImage, resizedImage, cv::Size(width,height));
 	cv::resize(reImage, showreImage, cv::Size(500,500),1,1,cv::INTER_NEAREST);
-	cv::imshow("resize",showreImage);
+	cv::imshow("resize", showreImage);
+	//x==========================================
+	cv::Mat grayImage;
+	cv::cvtColor(img,grayImage,cv::COLOR_BGRA2GRAY);
+	cv::imshow("Gray Scale", grayImage);
+	//x==========================================
 	cv::waitKey();
 
 	cv::Mat3b reImageAcc = reImage;
