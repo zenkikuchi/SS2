@@ -57,37 +57,30 @@ public:
 	HsvColor firsthsv;
 
 	void Setup(cv::Mat image) {
+		cv::Mat typewell;
+		cv::cvtColor(image, typewell, cv::COLOR_BGR2HSV);
 		for (int y = 0; y < image.rows; y++) {
 			for (int x = 0; x < image.cols; x++) {
 				cv::Mat3b reImageAcc = image;
 				cv::Vec3b pointer = reImageAcc(cv::Point(x, y));
 				int number = image.cols * y + x + 1;
 
-				/*HSVに変換*/
-				RgbColor rgb;
-				HsvColor hsv;
-				rgb.r = pointer[2];
-				rgb.g = pointer[1];
-				rgb.b = pointer[0];
-				RgbToHsv(rgb, hsv);
-
-				/*debug*/
-				if (x == 0 && y == 0) {
-					firsthsv.h = hsv.h;
-					firsthsv.s = hsv.s;
-					firsthsv.v = hsv.v;
-				}
+				std::cout << number-1<< "のSの値は\n     "<<(int)(typewell.at<cv::Vec3b>(x, y)[1])<<"です\n";
+	
 				/*vectorに代入*/
 				R.push_back(pointer[2]);
 				G.push_back(pointer[1]);
 				B.push_back(pointer[0]);
-				H.push_back(hsv.h);
-				S.push_back(hsv.s);
-				V.push_back(hsv.v);
+				H.push_back((int)(floor(typewell.at<cv::Vec3b>(x, y)[0])*255/180));
+				S.push_back((int)(typewell.at<cv::Vec3b>(x, y)[1]));
+				V.push_back((int)(typewell.at<cv::Vec3b>(x, y)[2]));
 
 				//printf("%d, R%d, G%d, B%d, H%d, S%d, V%d\n",sNumber,sMyR,sMyG,sMyB,sMyH,sMyS,sMyV);
 				//printf("%d\n",vecR[number-1]);                           //vectorはvenR[0]から始まる
 			}
+		}
+		for (int i = 0; i < H.size();  i++) {
+			std::cout << H[i] << std::endl;
 		}
 	}
 };
@@ -220,8 +213,14 @@ int Setup() {
 	int test = 0.2;
 	cv::Mat showreImage;
 	cv::resize(img, smallImage, cv::Size(10, 10));
+	/*****************************************************/
+	//smallImage.at<cv::Vec3b>(0, 0)[2] = 255;
+	//smallImage.at<cv::Vec3b>(0, 0)[1] = 0;
+	//smallImage.at<cv::Vec3b>(0, 0)[0] = 0;
+	/*****************************************************/
 	//cv::resize(resizedImage, resizedImage, cv::Size(width,height));
 	cv::resize(smallImage, showreImage, cv::Size(500, 500), 1, 1, cv::INTER_NEAREST);
+
 	cv::imshow("resize", showreImage);
 	//x==========================================
 	cv::Mat grayImage;
@@ -285,13 +284,16 @@ void Case1() {
 		if (abs(im.H[i] - im.H[i - 1]) > case1_borderValue_H || abs(im.H[i] - im.H[i - 1]) > 255 - case1_borderValue_H) {
 			getPlace.push_back(1);
 			latestPlace = i;
+			std::cout << i << "番目のHの値は" << im.H[i] << "です\n";
+			std::cout << i << "は15以上の色相値があります。\n";
 		}
-		else{
+		else {
 			getPlace.push_back(0);
+			std::cout << i << "番目のHの値は" << im.H[i] << "です\n";
 		}
 	}
 	int x, y;
-	for (unsigned int i = 1; i < im.H.size(); i++) {
+	for (unsigned int i = 0; i < im.H.size(); i++) {
 		if (getPlace[i] == 1) {
 			x = i % smallImage.cols;
 			y = (i - x) / smallImage.cols;

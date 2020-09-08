@@ -17,7 +17,7 @@ namespace case1 {
 		vector<int> returnDistance;
 
 		int latestPlace = 0;
-
+		std::cout << "ベクトルのサイズは" << smallVector.size() << "です";
 		for (unsigned int i = 1; i < smallVector.size(); i++) {
 			if (abs(smallVector[i] - smallVector[i - 1]) > borderValue || abs(smallVector[i] - smallVector[i - 1]) > 255 - borderValue) {
 				returnPlace.push_back(i * 120);

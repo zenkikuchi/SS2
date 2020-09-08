@@ -10,4 +10,3 @@ namespace case1 {
 
 	vector<int> Distance(vector<int> smallVector, int borderValue, int during);
 }
-
